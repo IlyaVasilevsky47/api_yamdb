@@ -1,4 +1,3 @@
-from datetime import date
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -23,7 +22,7 @@ class Genre(models.Model):
 
 class Title(models.Model):
     name = models.CharField(max_length=256)
-    year = models.DateField(default=date.year)
+    year = models.DateField()
     # rating = models.ForeignKey()
     description = models.TextField()
     genre = models.ForeignKey(
