@@ -69,6 +69,11 @@ class Review(models.Model):
         verbose_name="Оценка",
         help_text="Оцените произведение от 1 до 10"
     )
+    title = models.ForeignKey(
+        Title,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
 
     def __str__(self):
         return self.text
