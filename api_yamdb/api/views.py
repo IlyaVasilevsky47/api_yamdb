@@ -1,8 +1,9 @@
 from rest_framework import viewsets, mixins
 from rest_framework import filters
+from rest_framework.permissions import IsAdminUser
 
+from api.permissions import IsAuthorOrReadOnly
 from reviews.models import Category, Genre, Title, Review, Comment
-
 from .serializers import (
     CategorySerializer, GenreSerializer, TitleSerializer,
     ReviewSerializer, CommentSerializer
@@ -42,7 +43,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    # permission_classes = [AuthorOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly, IsAdminUser]
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -58,6 +59,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthorOrReadOnly, IsAdminUser]
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
