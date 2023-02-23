@@ -78,6 +78,10 @@ class Review(models.Model):
     def __str__(self):
         return self.text
 
+    class Meta:
+        verbose_name = 'Отзыв'
+        verbose_name_plural = 'Отзывы'
+
 
 class Comment(models.Model):
     review = models.ForeignKey(
@@ -106,3 +110,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
