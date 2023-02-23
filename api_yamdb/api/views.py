@@ -55,4 +55,12 @@ class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        ...
+        review_id = self.kwargs.get("review_id")
+        queryset = Comment.objects.filter(review=review_id)
+        return queryset
+
+    def perform_create(self, serializer):
+        serializer.save(
+            author=self.request.user,
+            review_id=self.kwargs.get("review_id")
+        )
