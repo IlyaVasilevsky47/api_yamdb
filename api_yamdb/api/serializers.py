@@ -17,7 +17,7 @@ class GenreSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Genre
 
-
+# Сделать валидацию года
 class TitleSerializer(serializers.ModelSerializer):
 
     class Meta:
