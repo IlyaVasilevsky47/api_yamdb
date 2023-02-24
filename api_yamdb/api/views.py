@@ -20,16 +20,16 @@ class ListCreateDestroy(mixins.ListModelMixin,
 class CategoryViewSet(ListCreateDestroy):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    # permission_classes = ('',)
-    filter_bckends = (filters.SearchFilter, )
+    # permission_classes = (IsAdminUser,)
+    filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class GenreViewSet(ListCreateDestroy):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    # permission_classes = ('',)
-    filter_bckends = (filters.SearchFilter, )
+    # permission_classes = (IsAdminUser,)
+    filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
