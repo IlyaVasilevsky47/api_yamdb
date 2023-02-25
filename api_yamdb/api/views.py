@@ -1,5 +1,5 @@
 from rest_framework import viewsets, mixins
-from rest_framework import filters
+from rest_framework import filters, serializers
 from rest_framework.permissions import IsAdminUser
 
 from api.permissions import IsAuthorOrReadOnly
@@ -51,10 +51,13 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        serializer.save(
-            author=self.request.user,
-            title_id=self.kwargs.get("title_id")
-        )
+        try:
+            serializer.save(
+                author=self.request.user,
+                title_id=self.kwargs.get("title_id")
+            )
+        except Exception:
+            raise serializers.ValidationError('Вы уже оставляли отзыв')
 
 
 class CommentViewSet(viewsets.ModelViewSet):
