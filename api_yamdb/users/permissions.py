@@ -1,5 +1,6 @@
 from rest_framework import permissions
-from . models import ReviewUser
+
+from .models import ReviewUser
 
 
 class Admin_ReadOnly_Permission(permissions.BasePermission):
@@ -17,7 +18,7 @@ class Admin_ReadOnly_Permission(permissions.BasePermission):
 
 class All_Permission(permissions.BasePermission):
     """
-    Определение прав для:
+    Определение прав внесения изменений:
     ReadOnly, Author, Admin, Moderator, Auth
     """
     def has_permission(self, request, view):
@@ -34,6 +35,13 @@ class All_Permission(permissions.BasePermission):
             or request.user.is_moderator
         )
 
+
+class Admin_Auth_Permission(permissions.BasePermission):
+    """Доступ к контенту только админу или аутентифицированным"""
+    def has_permission(self, request, view):
+        return (
+            request.user.is_authenticated and request.user.is_admin
+        )
 
 # class User_Admin_Permission(permissions.BasePermission):
 #     def has_permission(self, request, view):
