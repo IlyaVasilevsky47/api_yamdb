@@ -93,7 +93,8 @@ class PostPatchTitleSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = SlugRelatedField(
-        slug_field='username', read_only=True
+        slug_field='username', read_only=True,
+        default=serializers.CurrentUserDefault()
     )
 
     class Meta:
@@ -103,6 +104,9 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = SlugRelatedField(
+        slug_field='username', read_only=True
+    )
 
     class Meta:
         fields = ('id', 'text', 'author', 'pub_date')
