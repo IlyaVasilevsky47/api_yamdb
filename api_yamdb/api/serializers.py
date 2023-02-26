@@ -1,4 +1,5 @@
 from datetime import date
+from django.db.models import Avg
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
@@ -44,13 +45,17 @@ class GetTitleSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=256)
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
-    # rating = serializers.SerializerMethodField()
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
-            'id', 'name', 'year', 'description', 'genre', 'category'
+            'id', 'name', 'year', 'description', 'genre', 'category', 'rating'
         )
         model = Title
+
+    def get_rating(self, obj):
+        return Review.objects.filter(title=obj.id).aggregate(
+            Avg('score'))['score__avg']
 
 
 class PostPatchTitleSerializer(serializers.ModelSerializer):
@@ -61,7 +66,6 @@ class PostPatchTitleSerializer(serializers.ModelSerializer):
     category = SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
     )
-    
 
     class Meta:
         fields = (
