@@ -1,9 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
 from rest_framework import filters, serializers
 from rest_framework.permissions import IsAdminUser
 
 from api.permissions import IsAuthorOrReadOnly
-from reviews.models import Category, Genre, Title, Review, Comment
+from reviews.models import Category, Genre, Title, Review
 from .serializers import (
     CategorySerializer, GenreSerializer, TitleSerializer,
     ReviewSerializer, CommentSerializer
@@ -47,7 +48,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
-        queryset = Review.objects.filter(title=title_id)
+        queryset = get_object_or_404(Title, id=title_id).reviews.all()
         return queryset
 
     def perform_create(self, serializer):
@@ -66,7 +67,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
-        queryset = Comment.objects.filter(review=review_id)
+        queryset = get_object_or_404(Review, id=review_id).comments.all()
         return queryset
 
     def perform_create(self, serializer):
