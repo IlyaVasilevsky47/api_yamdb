@@ -3,6 +3,7 @@ from rest_framework import filters, permissions
 from rest_framework.permissions import IsAdminUser
 
 from api.permissions import IsAuthorOrReadOnly
+# from users.permissions import Admin_ReadOnly_Permission
 from reviews.models import Category, Genre, Title, Review, Comment
 from .serializers import (
     CategorySerializer, GenreSerializer, GetTitleSerializer,
@@ -20,7 +21,7 @@ class ListCreateDestroy(mixins.ListModelMixin,
 class CategoryViewSet(ListCreateDestroy):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    # permission_classes = (IsAdminUser,)
+    # permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
@@ -28,14 +29,14 @@ class CategoryViewSet(ListCreateDestroy):
 class GenreViewSet(ListCreateDestroy):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    # permission_classes = (IsAdminUser,)
+    # permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    # permission_classes = ('',)
+    # permission_classes = ('Admin_ReadOnly_Permission',)
     filter_bckends = (filters.SearchFilter, )
     search_fields = ('category', 'genre', 'name', 'year')
 
