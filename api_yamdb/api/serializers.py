@@ -44,10 +44,11 @@ class GetTitleSerializer(serializers.ModelSerializer):
     name = serializers.CharField(max_length=256)
     genre = GenreSerializer(many=True)
     category = CategorySerializer()
+    # rating = serializers.SerializerMethodField()
 
     class Meta:
         fields = (
-            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+            'id', 'name', 'year', 'description', 'genre', 'category'
         )
         model = Title
 
@@ -60,11 +61,11 @@ class PostPatchTitleSerializer(serializers.ModelSerializer):
     category = SlugRelatedField(
         slug_field='slug', queryset=Category.objects.all()
     )
-    rating = serializers.IntegerField(read_only=True)
+    
 
     class Meta:
         fields = (
-            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+            'id', 'name', 'year', 'description', 'genre', 'category'
         )
         model = Title
 
