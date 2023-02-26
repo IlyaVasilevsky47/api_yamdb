@@ -1,12 +1,13 @@
+from datetime import date
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
 
-from reviews.models import Category, Genre, Title, Review, Comment
+from reviews.models import Category, Genre, Title, GenreTitle, Review, Comment
 
 
 class CategorySerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(max_length=256, source='name')
+    name = serializers.CharField(max_length=256)
     slug = serializers.SlugField(
         max_length=50,
         validators=[
@@ -18,12 +19,12 @@ class CategorySerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('category_name', 'slug')
+        fields = ('name', 'slug')
         model = Category
 
 
 class GenreSerializer(serializers.ModelSerializer):
-    genre_name = serializers.CharField(max_length=256, source='name')
+    name = serializers.CharField(max_length=256)
     slug = serializers.SlugField(
         max_length=50,
         validators=[
@@ -35,19 +36,58 @@ class GenreSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        fields = ('genre_name', 'slug')
+        fields = ('name', 'slug')
         model = Genre
 
 
-# Сделать валидацию года
-class TitleSerializer(serializers.ModelSerializer):
-    # genre = GenreSerializer(required=False, many=True)
-    # category = CategorySerializer(required=False)
+class GetTitleSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=256)
+    genre = GenreSerializer(many=True)
+    category = CategorySerializer()
 
     class Meta:
-        fields = ('id', 'name', 'year', 'description', 'genre', 'category')
+        fields = (
+            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+        )
         model = Title
-        read_only_fields = ('')
+
+
+class PostPatchTitleSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(max_length=256)
+    genre = SlugRelatedField(
+        slug_field='slug', queryset=Genre.objects.all(), many=True
+    )
+    category = SlugRelatedField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
+    rating = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        fields = (
+            'id', 'name', 'year', 'rating', 'description', 'genre', 'category'
+        )
+        model = Title
+
+    def validate_year(self, value):
+        this_year = date.today().year
+        if value > this_year:
+            raise serializers.ValidationError('Сверьте год выпуска')
+        return value
+
+    def create(self, validated_data):
+        genres = validated_data.pop('genre')
+        title = Title.objects.create(**validated_data)
+
+        for genre in genres:
+            current_genre = Genre.objects.get(slug=genre)
+            GenreTitle.objects.create(genre=current_genre, title=title)
+        return title
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        context = {'request': request}
+        serializers = GetTitleSerializer(instance, context=context)
+        return serializers.data
 
 
 class ReviewSerializer(serializers.ModelSerializer):

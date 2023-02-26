@@ -1,12 +1,12 @@
 from rest_framework import viewsets, mixins
-from rest_framework import filters
+from rest_framework import filters, permissions
 from rest_framework.permissions import IsAdminUser
 
 from api.permissions import IsAuthorOrReadOnly
 from reviews.models import Category, Genre, Title, Review, Comment
 from .serializers import (
-    CategorySerializer, GenreSerializer, TitleSerializer,
-    ReviewSerializer, CommentSerializer
+    CategorySerializer, GenreSerializer, GetTitleSerializer,
+    PostPatchTitleSerializer, ReviewSerializer, CommentSerializer
 )
 
 
@@ -35,10 +35,14 @@ class GenreViewSet(ListCreateDestroy):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
     # permission_classes = ('',)
     filter_bckends = (filters.SearchFilter, )
     search_fields = ('category', 'genre', 'name', 'year')
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return GetTitleSerializer
+        return PostPatchTitleSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
