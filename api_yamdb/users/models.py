@@ -1,7 +1,7 @@
-from django.conf import settings
+# from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from verified_email_field.forms import VerifiedEmailField
+# from verified_email_field.forms import VerifiedEmailField
 
 from users.validators import validate_username_not_me
 
@@ -10,7 +10,7 @@ class ReviewUser(AbstractUser):
     "Кастомный User с распределенными правами по ролям"
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'email']
+    REQUIRED_FIELDS = ['email']
     
     USER_ROLE = 'user'
     MODERATOR_ROLE = 'moderator'
@@ -45,6 +45,13 @@ class ReviewUser(AbstractUser):
     role = models.CharField(
         choices=ROLE_CHOICES,
         max_length=50,
+        verbose_name='Роль пользователя',
+        help_text='Выберите из списка роль для пользователя'
+    )
+
+    bio = models.TextField(
+        max_length=250,
+        blank=True,
         verbose_name='Роль пользователя',
         help_text='Выберите из списка роль для пользователя'
     )
