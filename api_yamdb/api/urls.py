@@ -21,17 +21,10 @@ router.register(
     r'titles/(?P<title_id>\d+)/reviews/(?P<review_id>\d+)/comments',
     CommentViewSet, basename='comment'
 )
+router.register(r'users', ReviewUserViewSet, basename='users')
 
 urlpatterns = [
-    path('v1/', include(router.urls))
-]
-router_v1 = routers.DefaultRouter()
-router_v1.register('users', ReviewUserViewSet, basename='users')
-
-
-urlpatterns = [
-    path('v1/', include(router_v1.urls)),
+    path('v1/', include(router.urls)),
     path('v1/auth/signup/', create_new_user),
     path('v1/auth/token/', create_jwt_token),
-    url(r'^verified-email-field/', include('verified_email_field.urls')),
 ]

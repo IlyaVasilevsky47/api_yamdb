@@ -35,7 +35,7 @@ class ListCreateDestroy(mixins.ListModelMixin,
 class CategoryViewSet(ListCreateDestroy):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    # permission_classes = (Admin_ReadOnly_Permission,)
+    permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
@@ -43,14 +43,14 @@ class CategoryViewSet(ListCreateDestroy):
 class GenreViewSet(ListCreateDestroy):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    # permission_classes = (Admin_ReadOnly_Permission,)
+    permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    # permission_classes = ('Admin_ReadOnly_Permission',)
+    permission_classes = ('Admin_ReadOnly_Permission',)
     filter_bckends = (filters.SearchFilter, )
     search_fields = ('category', 'genre', 'name', 'year')
 
