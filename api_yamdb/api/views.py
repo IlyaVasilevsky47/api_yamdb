@@ -1,13 +1,14 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, mixins
-from rest_framework import filters, serializers
+from rest_framework import filters, permissions, serializers
 from rest_framework.permissions import IsAdminUser
 
 from api.permissions import IsAuthorOrReadOnly
-from reviews.models import Category, Genre, Title, Review
+# from users.permissions import Admin_ReadOnly_Permission
+from reviews.models import Category, Genre, Title, Review, Comment
 from .serializers import (
-    CategorySerializer, GenreSerializer, TitleSerializer,
-    ReviewSerializer, CommentSerializer
+    CategorySerializer, GenreSerializer, GetTitleSerializer,
+    PostPatchTitleSerializer, ReviewSerializer, CommentSerializer
 )
 
 
@@ -21,25 +22,29 @@ class ListCreateDestroy(mixins.ListModelMixin,
 class CategoryViewSet(ListCreateDestroy):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    # permission_classes = ('',)
-    filter_bckends = (filters.SearchFilter, )
+    # permission_classes = (Admin_ReadOnly_Permission,)
+    filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class GenreViewSet(ListCreateDestroy):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    # permission_classes = ('',)
-    filter_bckends = (filters.SearchFilter, )
+    # permission_classes = (Admin_ReadOnly_Permission,)
+    filter_bckends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    serializer_class = TitleSerializer
-    # permission_classes = ('',)
+    # permission_classes = ('Admin_ReadOnly_Permission',)
     filter_bckends = (filters.SearchFilter, )
     search_fields = ('category', 'genre', 'name', 'year')
+
+    def get_serializer_class(self):
+        if self.request.method in permissions.SAFE_METHODS:
+            return GetTitleSerializer
+        return PostPatchTitleSerializer
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
