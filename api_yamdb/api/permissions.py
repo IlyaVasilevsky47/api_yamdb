@@ -17,7 +17,7 @@ class IsAuthorOrReadOnly(permissions.BasePermission):
 
 from rest_framework import permissions
 
-from .models import ReviewUser
+from users.models import ReviewUser
 
 
 class Admin_ReadOnly_Permission(permissions.BasePermission):

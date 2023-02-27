@@ -32,16 +32,16 @@ class ReviewUser(AbstractUser):
         help_text='Как к Вам обращаться?'
     )
 
-    email = VerifiedEmailField(
-        'e-mail',
-        fieldsetup_id='user-email'
-    )
-
-    # email = models.EmailField(
-    #     max_length=254,
-    #     verbose_name='адрес электронной почты',
-    #     help_text='Введите адрес электронной почты'
+    # email = VerifiedEmailField(
+    #     'e-mail',
+    #     fieldsetup_id='user-email'
     # )
+
+    email = models.EmailField(
+        max_length=254,
+        verbose_name='адрес электронной почты',
+        help_text='Введите адрес электронной почты'
+    )
     role = models.CharField(
         choices=ROLE_CHOICES,
         max_length=50,
