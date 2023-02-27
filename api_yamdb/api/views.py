@@ -50,7 +50,7 @@ class GenreViewSet(ListCreateDestroy):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    permission_classes = ('Admin_ReadOnly_Permission',)
+    permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter, )
     search_fields = ('category', 'genre', 'name', 'year')
 
