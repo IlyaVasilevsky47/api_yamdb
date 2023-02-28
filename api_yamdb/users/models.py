@@ -25,7 +25,7 @@ class ReviewUser(AbstractUser):
     )
 
     username = models.CharField(
-        max_length=40,
+        max_length=150,
         unique=True,
         validators=[validate_username_not_me],
         verbose_name='Имя пользователя',
@@ -57,14 +57,14 @@ class ReviewUser(AbstractUser):
     )
 
     first_name = models.CharField(
-        max_length=100,
+        max_length=150,
         blank=True,
         verbose_name='Имя пользователя',
         help_text='Введите имя пользователя'
     )
 
     last_name = models.CharField(
-        max_length=100,
+        max_length=150,
         blank=True,
         verbose_name='Фамилия пользователя',
         help_text='Введите Вашу фамилию'
