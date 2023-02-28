@@ -10,7 +10,7 @@ def validate_username_not_me(value):
         raise ValidationError(
             'Выберите другое обозначение для username'
         )
-    if not re.match('^[\w.@+-]+\z', value):
+    '''if not re.match('^[\w.@+-]+\z', value):
         raise ValidationError(
             'Выбранные символы не подходят для username'
-        )
+        )'''
