@@ -33,7 +33,7 @@ class CategoryViewSet(ListCreateDestroy):
     serializer_class = CategorySerializer
     permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
-    search_fields = ('name',)
+    search_fields = ('$name',)
 
 
 class GenreViewSet(ListCreateDestroy):
@@ -41,14 +41,14 @@ class GenreViewSet(ListCreateDestroy):
     serializer_class = GenreSerializer
     permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter,)
-    search_fields = ('name',)
+    search_fields = ('$name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (Admin_ReadOnly_Permission,)
     filter_bckends = (filters.SearchFilter, )
-    search_fields = ('category', 'genre', 'name', 'year')
+    search_fields = ('category__slug', 'genre__slug', 'name', 'year')
 
     def get_serializer_class(self):
         if self.request.method in permissions.SAFE_METHODS:
