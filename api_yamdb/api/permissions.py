@@ -29,7 +29,7 @@ class All_Permission(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_authenticated:
             return (
-                obj.user == request.user
+                obj.author == request.user
                 or request.user.is_admin
                 or request.user.is_moderator
                 or request.method in permissions.SAFE_METHODS

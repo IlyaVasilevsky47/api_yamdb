@@ -137,7 +137,7 @@ class CreateTokenSerializer(serializers.ModelSerializer):
     """Создание токена"""
     confirmation_code = serializers.CharField(required=True)
     username = serializers.CharField(required=True)
-    
+
     class Meta:
         model = ReviewUser
-        fields = ('username','confirmation_code')
+        fields = ('username', 'confirmation_code')
