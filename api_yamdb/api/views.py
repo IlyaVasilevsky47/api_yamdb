@@ -1,28 +1,24 @@
-from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, mixins
-from rest_framework import filters, permissions, serializers
-from rest_framework.permissions import IsAdminUser
 from http import HTTPStatus
 
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import viewsets, permissions
+from rest_framework import filters, mixins, permissions, serializers, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
+from reviews.models import Category, Genre, Review, Title
 
-from users.models import ReviewUser
-from .permissions import Admin_ReadOnly_Permission, All_Permission, Admin_Auth_Permission
-from .serializers import ReviewUserSerializer, CreateUserSerializer, CreateTokenSerializer
+from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
+                          All_Permission)
+from .serializers import (CategorySerializer, CommentSerializer,
+                          CreateTokenSerializer, CreateUserSerializer,
+                          GenreSerializer, GetTitleSerializer,
+                          PostPatchTitleSerializer, ReviewSerializer,
+                          ReviewUserSerializer)
 
-
-from api.permissions import IsAuthorOrReadOnly
-from reviews.models import Category, Genre, Title, Review, Comment
-from .serializers import (
-    CategorySerializer, GenreSerializer, GetTitleSerializer,
-    PostPatchTitleSerializer, ReviewSerializer, CommentSerializer
-)
+User = get_user_model()
 
 
 class ListCreateDestroy(mixins.ListModelMixin,
@@ -62,7 +58,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsAuthorOrReadOnly, IsAdminUser]
+    permission_classes = [All_Permission]
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -81,7 +77,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [IsAuthorOrReadOnly, IsAdminUser]
+    permission_classes = [All_Permission]
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
@@ -96,7 +92,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class ReviewUserViewSet(viewsets.ModelViewSet):
-    queryset = ReviewUser.objects.all()
+    queryset = User.objects.all()
     serializer_class = ReviewUserSerializer
     permission_classes = (Admin_Auth_Permission,)
     # pagination_class = 1
@@ -108,7 +104,7 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
         url_path='me',
         url_name='me'
     )
-    def me_edit_profile(self,request, *args, **kwargs):
+    def me_edit_profile(self, request, *args, **kwargs):
         isinstance = self.request.user
         serializer = self.get_serializer(isinstance)
         if self.request.method == 'PATCH':
@@ -121,6 +117,7 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
             serializer.save(role=self.request.user.role)
         return Response(serializer.data)
 
+
 @api_view(['POST'])
 @permission_classes([permissions.AllowAny])
 def create_new_user(request):
@@ -130,7 +127,7 @@ def create_new_user(request):
     username = serializer.validated_data.get('username')
     serializer.save()
     confirmation_code = default_token_generator.make_token(
-        ReviewUser.objects.get(email=email, username=username)
+        User.objects.get(email=email, username=username)
     )
     token_message = f'Код подтверждения для {username}: {confirmation_code}'
     send_mail(
@@ -149,7 +146,7 @@ def create_jwt_token(request):
     serializer.is_valid(raise_exception=True)
     confirmation_code = serializer.validated_data.get('confirmation_code')
     username = serializer.validated_data.get('username')
-    user = get_object_or_404(ReviewUser, username=username)
+    user = get_object_or_404(User, username=username)
     if default_token_generator.check_token(user, confirmation_code):
         token = AccessToken.for_user(user)
         return Response(
