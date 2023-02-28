@@ -1,4 +1,4 @@
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import SimpleRouter, DefaultRouter
 from django.urls import include, path
 
 from .views import (
@@ -7,7 +7,9 @@ from .views import (
 )
 
 
-router = SimpleRouter()
+# router = SimpleRouter()
+router = DefaultRouter()
+
 router.register(r'categories', CategoryViewSet)
 router.register(r'genres', GenreViewSet)
 router.register(r'titles', TitleViewSet)
@@ -19,7 +21,7 @@ router.register(
     CommentViewSet, basename='comment'
 )
 router.register(r'users', ReviewUserViewSet, basename='users')
-router.register(r'users', ReviewUserViewSet, basename='users')
+# router.register(r'users', ReviewUserViewSet, basename='users')
 
 urlpatterns = [
     path('v1/', include(router.urls)),
