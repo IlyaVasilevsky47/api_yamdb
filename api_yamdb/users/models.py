@@ -45,6 +45,7 @@ class ReviewUser(AbstractUser):
     role = models.CharField(
         choices=ROLE_CHOICES,
         max_length=50,
+        default='user',
         verbose_name='Роль пользователя',
         help_text='Выберите из списка роль для пользователя'
     )
