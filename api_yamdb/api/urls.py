@@ -1,4 +1,4 @@
-from rest_framework.routers import SimpleRouter, DefaultRouter
+from rest_framework.routers import SimpleRouter
 from django.urls import include, path
 
 from .views import (
@@ -7,8 +7,8 @@ from .views import (
 )
 
 
-# router = SimpleRouter()
-router = DefaultRouter()
+router = SimpleRouter()
+# router = DefaultRouter()
 
 router.register(r'categories', CategoryViewSet)
 router.register(r'genres', GenreViewSet)
