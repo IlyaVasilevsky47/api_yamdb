@@ -117,7 +117,7 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewUserSerializer
     permission_classes = (Admin_Auth_Permission,)
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('^[\w.username+-]+\z',)
+    search_fields = ('^[\w.<username>+-]+\z',)
 
     @action(
         methods=('patch', 'get'),
