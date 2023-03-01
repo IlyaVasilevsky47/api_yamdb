@@ -60,6 +60,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [All_Permission]
+    # lookup_value_regex = '^[\w.@+-]+\z'
     filter_backends = (filters.SearchFilter,)
     search_fields = ('username',)
 
