@@ -80,6 +80,7 @@ class ReviewUser(AbstractUser):
                 name='unique_name',
             ),
         ]
+        ordering = ('username',)
 
     @property
     def is_admin(self):
