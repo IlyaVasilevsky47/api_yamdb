@@ -60,9 +60,6 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [All_Permission]
-    # lookup_value_regex = '^[\w.@+-]+\z'
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('username',)
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -119,7 +116,8 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ReviewUserSerializer
     permission_classes = (Admin_Auth_Permission,)
-    # pagination_class = 1
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('^[\w.username+-]+\z',)
 
     @action(
         methods=('patch', 'get'),
