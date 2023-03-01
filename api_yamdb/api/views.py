@@ -9,6 +9,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 from reviews.models import Category, Genre, Review, Title
+from rest_framework import filters
 
 from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
                           All_Permission)
@@ -59,6 +60,8 @@ class TitleViewSet(viewsets.ModelViewSet):
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [All_Permission]
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username',)
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
