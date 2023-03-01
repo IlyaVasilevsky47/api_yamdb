@@ -26,7 +26,7 @@ class ListCreateDestroy(mixins.ListModelMixin,
                         mixins.CreateModelMixin,
                         mixins.DestroyModelMixin,
                         viewsets.GenericViewSet):
-    pass
+    lookup_field = 'slug'
 
 
 class CategoryViewSet(ListCreateDestroy):
@@ -48,7 +48,7 @@ class GenreViewSet(ListCreateDestroy):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (Admin_ReadOnly_Permission,)
-    filter_backends = (filters.SearchFilter, )
+    filter_backends = (filters.SearchFilter,)
     search_fields = ('category__slug', 'genre__slug', 'name', 'year')
 
     def get_serializer_class(self):
