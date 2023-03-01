@@ -140,7 +140,7 @@ class CreateTokenSerializer(serializers.ModelSerializer):
         required=True,
         max_length=150,
     )
-    
+
     class Meta:
         model = ReviewUser
         fields = ('username', 'confirmation_code')

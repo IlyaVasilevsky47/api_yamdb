@@ -103,6 +103,16 @@ class CommentViewSet(viewsets.ModelViewSet):
             review_id=self.kwargs.get("review_id")
         )
 
+    def create(self, request, *args, **kwargs):
+        if not Review.objects.filter(id=self.kwargs.get("review_id")).exists():
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED
+        )
+
 
 class ReviewUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
