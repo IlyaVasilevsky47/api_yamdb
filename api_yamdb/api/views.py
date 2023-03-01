@@ -7,10 +7,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import filters, mixins, permissions, serializers, viewsets, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Genre, Review, Title
-from rest_framework import filters
 
+from reviews.models import Category, Genre, Review, Title
 from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
                           All_Permission)
 from .serializers import (CategorySerializer, CommentSerializer,
@@ -18,6 +18,7 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
                           PostPatchTitleSerializer, ReviewSerializer,
                           ReviewUserSerializer)
+from .filters import TitleFilter
 
 User = get_user_model()
 
@@ -48,8 +49,8 @@ class GenreViewSet(ListCreateDestroy):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (Admin_ReadOnly_Permission,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('category__slug', 'genre__slug', 'name', 'year')
+    filter_backends = (DjangoFilterBackend, )
+    filterset_class = TitleFilter
 
     def get_serializer_class(self):
         if self.request.method in permissions.SAFE_METHODS:

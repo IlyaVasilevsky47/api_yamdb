@@ -1,11 +1,21 @@
 from django_filters import rest_framework
-from reviews.models import Category, Genre, Review, Title
+from reviews.models import Title
 
-class AriticleFilter(rest_framework.FilterSet):
-    min_read = rest_framework(field_name='read_num', lookup_expr='gte')
-    max_read = rest_framework.NumberFilter(field_name='read_num', lookup_expr='lte')
-    title = rest_framework.CharFilter(field_name='title', lookup_expr='icontains')
+
+class TitleFilter(rest_framework.FilterSet):
+    category = rest_framework.CharFilter(
+        field_name='category__slug', lookup_expr='iexact'
+    )
+    genre = rest_framework.CharFilter(
+        field_name='genre__slug', lookup_expr='iexact'
+    )
+    name = rest_framework.CharFilter(
+        field_name='name', lookup_expr='icontains'
+    )
+    year = rest_framework.NumberFilter(
+        field_name='year', lookup_expr='exact'
+    )
 
     class Meta:
-        model = Article
-        fields = ['title', 'category', 'min_read', 'max_read']
+        model = Title
+        fields = ('category', 'genre', 'name', 'year')
