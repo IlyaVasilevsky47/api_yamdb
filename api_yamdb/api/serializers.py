@@ -123,7 +123,7 @@ class ReviewUserSerializer(serializers.ModelSerializer):
     """Получение данных пользователя"""
     class Meta:
         model = ReviewUser
-        fields = ('username', 'email', 'first_name', 'last_name', 'role')
+        fields = ('username', 'email', 'first_name', 'last_name', 'bio', 'role')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
