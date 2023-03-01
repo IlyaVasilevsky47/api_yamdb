@@ -27,6 +27,7 @@ class ReviewUser(AbstractUser):
     username = models.CharField(
         max_length=150,
         unique=True,
+        # lookup_value_regex = '[^/]+',
         validators=[validate_username_not_me],
         verbose_name='Имя пользователя',
         help_text='Как к Вам обращаться?'
@@ -39,6 +40,7 @@ class ReviewUser(AbstractUser):
 
     email = models.EmailField(
         max_length=254,
+        unique=True,
         verbose_name='адрес электронной почты',
         help_text='Введите адрес электронной почты'
     )
@@ -78,6 +80,7 @@ class ReviewUser(AbstractUser):
                 name='unique_name',
             ),
         ]
+        ordering = ('username',)
 
     @property
     def is_admin(self):

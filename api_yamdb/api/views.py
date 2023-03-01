@@ -117,8 +117,10 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ReviewUserSerializer
     permission_classes = (Admin_Auth_Permission,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('^[\w.<username>+-]+\z',)
+    lookup_field = 'username'
+    lookup_value_regex = '[^/]+'
+    # filter_backends = (filters.SearchFilter,)
+    # search_fields = ('^[\w.<username>+-]+\z',)
 
     @action(
         methods=('patch', 'get'),
