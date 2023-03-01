@@ -118,8 +118,8 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
     permission_classes = (Admin_Auth_Permission,)
     lookup_field = 'username'
     lookup_value_regex = '[^/]+'
-    # filter_backends = (filters.SearchFilter,)
-    # search_fields = ('^[\w.<username>+-]+\z',)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('^[\w.<username>+-]+\z',)
 
     @action(
         methods=('patch', 'get'),
