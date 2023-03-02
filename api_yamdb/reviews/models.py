@@ -12,6 +12,9 @@ class Category(models.Model):
     def __str__(self):
         return self.slug
 
+    class Meta:
+        ordering = ['id']
+
 
 class Genre(models.Model):
     name = models.CharField(max_length=256)
@@ -19,6 +22,9 @@ class Genre(models.Model):
 
     def __str__(self):
         return self.slug
+
+    class Meta:
+        ordering = ['id']
 
 
 class Title(models.Model):
@@ -33,6 +39,9 @@ class Title(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        ordering = ['id']
 
 
 class GenreTitle(models.Model):
@@ -78,6 +87,7 @@ class Review(models.Model):
         return self.text
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
         constraints = [
@@ -117,5 +127,6 @@ class Comment(models.Model):
         return self.text
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
