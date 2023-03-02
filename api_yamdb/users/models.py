@@ -1,11 +1,7 @@
-# from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 from users.validators import validate_username_not_me
-
-# from verified_email_field.forms import VerifiedEmailField
-
 
 
 class ReviewUser(AbstractUser):
@@ -17,28 +13,20 @@ class ReviewUser(AbstractUser):
     USER_ROLE = 'user'
     MODERATOR_ROLE = 'moderator'
     ADMIN_ROLE = 'admin'
-    # SUPERUSER_ROLE = 'superuser'
 
     ROLE_CHOICES = (
         (USER_ROLE, 'user'),
         (MODERATOR_ROLE, 'moderator'),
         (ADMIN_ROLE, 'admin'),
-        # (SUPERUSER_ROLE, 'superuser'),
     )
 
     username = models.CharField(
         max_length=150,
         unique=True,
-        # lookup_value_regex = '[^/]+',
         validators=[validate_username_not_me],
         verbose_name='Имя пользователя',
         help_text='Как к Вам обращаться?'
     )
-
-    # email = VerifiedEmailField(
-    #     'e-mail',
-    #     fieldsetup_id='user-email'
-    # )
 
     email = models.EmailField(
         max_length=254,
@@ -91,9 +79,3 @@ class ReviewUser(AbstractUser):
     @property
     def is_moderator(self):
         return self.role == ReviewUser.MODERATOR_ROLE or self.is_staff
-
-    # def email_user(self, subject, message, from_email='email', **kwargs):
-    #     return super().email_user(subject, message, from_email, **kwargs)
-
-    # def __str__(self):
-    #     return self.username
