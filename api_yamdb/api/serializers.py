@@ -1,10 +1,11 @@
 from datetime import date
+
 from django.db.models import Avg
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.validators import UniqueValidator
 
-from reviews.models import Category, Genre, Title, GenreTitle, Review, Comment
+from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 from users.models import ReviewUser
 
 

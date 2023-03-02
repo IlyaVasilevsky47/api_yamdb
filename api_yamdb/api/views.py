@@ -4,16 +4,17 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import (
-    filters, mixins, permissions, serializers, viewsets, status
-)
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import (filters, mixins, permissions, serializers, status,
+                            viewsets)
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from reviews.models import Category, Genre, Review, Title
 from users.models import ReviewUser
+
+from .filters import TitleFilter
 from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
                           All_Permission)
 from .serializers import (CategorySerializer, CommentSerializer,
@@ -21,7 +22,6 @@ from .serializers import (CategorySerializer, CommentSerializer,
                           GenreSerializer, GetTitleSerializer,
                           PostPatchTitleSerializer, ReviewSerializer,
                           ReviewUserSerializer)
-from .filters import TitleFilter
 
 User = get_user_model()
 
@@ -155,19 +155,24 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
 @permission_classes([permissions.AllowAny])
 def create_new_user(request):
     serializer = CreateUserSerializer(data=request.data)
-    serializer.is_valid()
-    is_present = ReviewUser.objects.filter(email=request.data.get('email'), username=request.data.get('username'))
-    if is_present.exists():
-        email = request.data.get('email')
-        username = request.data.get('username')
+
+    request_email = request.data.get('email')
+    request_username = request.data.get('username')
+    is_present = ReviewUser.objects.filter(
+        email=request_email, username=request_username
+    ).exists()
+
+    if is_present:
+        serializer.is_valid()
         confirmation_code = default_token_generator.make_token(
-            User.objects.get(email=email, username=username)
+            User.objects.get(email=request_email, username=request_username)
         )
-        token_message = f'Код подтверждения для {username}: {confirmation_code}'
+        token_message = (f'Код подтверждения для {request_username}:'
+                         f'{confirmation_code}')
         send_mail(
             message=token_message,
             subject='Confirmation code',
-            recipient_list=[email],
+            recipient_list=[request_email],
             from_email=None
         )
         return Response(serializer.data, status=HTTPStatus.OK)
@@ -179,7 +184,8 @@ def create_new_user(request):
         confirmation_code = default_token_generator.make_token(
             User.objects.get(email=email, username=username)
         )
-        token_message = f'Код подтверждения для {username}: {confirmation_code}'
+        token_message = (f'Код подтверждения для {username}:'
+                         f'{confirmation_code}')
         send_mail(
             message=token_message,
             subject='Confirmation code',

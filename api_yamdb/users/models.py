@@ -1,9 +1,11 @@
 # from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-# from verified_email_field.forms import VerifiedEmailField
 
 from users.validators import validate_username_not_me
+
+# from verified_email_field.forms import VerifiedEmailField
+
 
 
 class ReviewUser(AbstractUser):

@@ -1,5 +1,6 @@
-from rest_framework import permissions
 from http import HTTPStatus
+
+from rest_framework import permissions
 
 
 class Admin_ReadOnly_Permission(permissions.BasePermission):
