@@ -27,7 +27,7 @@ INSTALLED_APPS = [
     'api',
     'rest_framework_simplejwt',
     'users.apps.UsersConfig',
-    'verified_email_field',
+    'verified_email_field.apps.VerifiedEmailFieldConfig',
     'django_filters',
 ]
 
