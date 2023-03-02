@@ -13,6 +13,7 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
 
 from reviews.models import Category, Genre, Review, Title
+from users.models import ReviewUser
 from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
                           All_Permission)
 from .serializers import (CategorySerializer, CommentSerializer,
@@ -154,21 +155,38 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
 @permission_classes([permissions.AllowAny])
 def create_new_user(request):
     serializer = CreateUserSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    email = serializer.validated_data.get('email')
-    username = serializer.validated_data.get('username')
-    serializer.save()
-    confirmation_code = default_token_generator.make_token(
-        User.objects.get(email=email, username=username)
-    )
-    token_message = f'Код подтверждения для {username}: {confirmation_code}'
-    send_mail(
-        message=token_message,
-        subject='Confirmation code',
-        recipient_list=[email],
-        from_email=None
-    )
-    return Response(serializer.data, status=HTTPStatus.OK)
+    serializer.is_valid()
+    is_present = ReviewUser.objects.filter(email=request.data.get('email'), username=request.data.get('username'))
+    if is_present.exists():
+        email = request.data.get('email')
+        username = request.data.get('username')
+        confirmation_code = default_token_generator.make_token(
+            User.objects.get(email=email, username=username)
+        )
+        token_message = f'Код подтверждения для {username}: {confirmation_code}'
+        send_mail(
+            message=token_message,
+            subject='Confirmation code',
+            recipient_list=[email],
+            from_email=None
+        )
+        return Response(serializer.data, status=HTTPStatus.OK)
+    else:
+        serializer.is_valid(raise_exception=True)
+        email = serializer.validated_data.get('email')
+        username = serializer.validated_data.get('username')
+        serializer.save()
+        confirmation_code = default_token_generator.make_token(
+            User.objects.get(email=email, username=username)
+        )
+        token_message = f'Код подтверждения для {username}: {confirmation_code}'
+        send_mail(
+            message=token_message,
+            subject='Confirmation code',
+            recipient_list=[email],
+            from_email=None
+        )
+        return Response(serializer.data, status=HTTPStatus.OK)
 
 
 @api_view(['POST'])
