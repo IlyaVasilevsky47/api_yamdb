@@ -119,8 +119,8 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
     permission_classes = (Admin_Auth_Permission,)
     lookup_field = 'username'
     lookup_value_regex = '[^/]+'
-    # filter_backends = (filters.SearchFilter,)
-    # search_fields = ('^[\w.<username>+-]+\z',)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('username',)
 
     @action(
         methods=('patch', 'get'),
@@ -140,6 +140,12 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(role=self.request.user.role)
+
+        if self.request.method == 'PUT':
+            return Response(status=HTTPStatus.METHOD_NOT_ALLOWED)
+            
+            # HTTPStatus.METHOD_NOT_ALLOWED
+        
         return Response(serializer.data)
 
 
