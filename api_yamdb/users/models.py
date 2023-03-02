@@ -11,7 +11,7 @@ class ReviewUser(AbstractUser):
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['email']
-    
+
     USER_ROLE = 'user'
     MODERATOR_ROLE = 'moderator'
     ADMIN_ROLE = 'admin'

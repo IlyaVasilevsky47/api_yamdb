@@ -45,6 +45,7 @@ class Admin_Auth_Permission(permissions.BasePermission):
             request.user.is_authenticated and request.user.is_admin
         )
 
+
 class PUT_username_not_allowed(permissions.BasePermission):
     """
     PUT-запрос к `/api/v1/users/{username}/`
