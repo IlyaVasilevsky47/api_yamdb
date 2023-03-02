@@ -7,4 +7,4 @@ pytest-django==4.4.0
 pytest-pythonpath==0.7.3
 django-filter==22.1
 djangorestframework-simplejwt==5.2.2
-django-verified-email-field 1.9.0
+django-verified-email-field==1.9.0
