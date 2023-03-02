@@ -4,7 +4,9 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, mixins, permissions, serializers, viewsets, status
+from rest_framework import (
+    filters, mixins, permissions, serializers, viewsets, status
+)
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -141,12 +143,10 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
             serializer.is_valid(raise_exception=True)
             serializer.save(role=self.request.user.role)
 
+    def update(self, request, *args, **kwargs):
         if self.request.method == 'PUT':
             return Response(status=HTTPStatus.METHOD_NOT_ALLOWED)
-            
-            # HTTPStatus.METHOD_NOT_ALLOWED
-        
-        return Response(serializer.data)
+        return super().update(request, *args, **kwargs)
 
 
 @api_view(['POST'])
