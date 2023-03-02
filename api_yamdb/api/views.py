@@ -142,6 +142,7 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
             )
             serializer.is_valid(raise_exception=True)
             serializer.save(role=self.request.user.role)
+        return Response(serializer.data)
 
     def update(self, request, *args, **kwargs):
         if self.request.method == 'PUT':
