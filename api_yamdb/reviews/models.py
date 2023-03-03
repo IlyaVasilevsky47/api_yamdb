@@ -7,7 +7,7 @@ User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(verbose_name='Название категории', max_length=256)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=50)
 
     def __str__(self):
         return self.slug
@@ -20,7 +20,7 @@ class Category(models.Model):
 
 class Genre(models.Model):
     name = models.CharField(verbose_name='Имя жанра', max_length=256)
-    slug = models.SlugField()
+    slug = models.SlugField(max_length=50)
 
     def __str__(self):
         return self.slug
@@ -32,10 +32,14 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.CharField(verbose_name='Название произведения', max_length=256)
+    name = models.CharField(
+        verbose_name='Название произведения', max_length=256
+    )
     year = models.IntegerField(verbose_name='Год выхода', )
     description = models.TextField(verbose_name='Краткое описание', )
-    genre = models.ManyToManyField(Genre, verbose_name='Жанр', through='GenreTitle')
+    genre = models.ManyToManyField(
+        Genre, verbose_name='Жанр', through='GenreTitle'
+    )
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
