@@ -71,13 +71,10 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return queryset
 
     def perform_create(self, serializer):
-        try:
-            serializer.save(
-                author=self.request.user,
-                title_id=self.kwargs.get("title_id")
-            )
-        except Exception:
-            raise serializers.ValidationError('Вы уже оставляли отзыв')
+        serializer.save(
+            author=self.request.user,
+            title_id=self.kwargs.get("title_id")
+        )
 
     def create(self, request, *args, **kwargs):
         if not Title.objects.filter(id=self.kwargs.get("title_id")).exists():
