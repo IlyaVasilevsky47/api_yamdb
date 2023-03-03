@@ -5,7 +5,7 @@ from users.validators import validate_username_not_me
 
 
 class ReviewUser(AbstractUser):
-    "Кастомный User с распределенными правами по ролям"
+    """Кастомный User с распределенными правами по ролям"""
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['email']
