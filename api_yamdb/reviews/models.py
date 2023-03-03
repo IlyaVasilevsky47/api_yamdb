@@ -65,7 +65,7 @@ class Publication(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='%(class)s_related',
+        related_name='%(class)s',
         verbose_name="Автор",
         help_text="Автор публикации"
     )
