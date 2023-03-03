@@ -43,7 +43,7 @@ class Title(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        verbose_name='Категория', 
+        verbose_name='Категория',
     )
 
     def __str__(self):
