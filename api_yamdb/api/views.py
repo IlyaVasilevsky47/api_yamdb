@@ -70,20 +70,14 @@ class ReviewViewSet(viewsets.ModelViewSet):
         queryset = get_object_or_404(Title, id=title_id).reviews.all()
         return queryset
 
+    def get_title(self):
+        title = get_object_or_404(Title, id=self.kwargs.get('title_id'))
+        return title
+
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user,
-            title_id=self.kwargs.get("title_id")
-        )
-
-    def create(self, request, *args, **kwargs):
-        if not Title.objects.filter(id=self.kwargs.get("title_id")).exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED
+            title=self.get_title()
         )
 
 
@@ -96,21 +90,14 @@ class CommentViewSet(viewsets.ModelViewSet):
         queryset = get_object_or_404(Review, id=review_id).comments.all()
         return queryset
 
+    def get_review(self):
+        review = get_object_or_404(Review, id=self.kwargs.get("review_id"))
+        return review
+
     def perform_create(self, serializer):
         serializer.save(
             author=self.request.user,
-            review_id=self.kwargs.get("review_id")
-        )
-
-    def create(self, request, *args, **kwargs):
-        if not Review.objects.filter(id=self.kwargs.get("review_id")).exists():
-            return Response(status=status.HTTP_404_NOT_FOUND)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        return Response(
-            serializer.data, status=status.HTTP_201_CREATED
-        )
+            review=self.get_review())
 
 
 class ReviewUserViewSet(viewsets.ModelViewSet):
@@ -153,43 +140,32 @@ class ReviewUserViewSet(viewsets.ModelViewSet):
 def create_new_user(request):
     serializer = CreateUserSerializer(data=request.data)
 
-    request_email = request.data.get('email')
-    request_username = request.data.get('username')
+    email = request.data.get('email')
+    username = request.data.get('username')
     is_present = ReviewUser.objects.filter(
-        email=request_email, username=request_username
+        email=email, username=username
     ).exists()
 
     if is_present:
         serializer.is_valid()
-        confirmation_code = default_token_generator.make_token(
-            User.objects.get(email=request_email, username=request_username)
-        )
-        token_message = (f'Код подтверждения для {request_username}:'
-                         f'{confirmation_code}')
-        send_mail(
-            message=token_message,
-            subject='Confirmation code',
-            recipient_list=[request_email],
-            from_email=None
-        )
-        return Response(serializer.data, status=HTTPStatus.OK)
     else:
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         username = serializer.validated_data.get('username')
         serializer.save()
-        confirmation_code = default_token_generator.make_token(
-            User.objects.get(email=email, username=username)
-        )
-        token_message = (f'Код подтверждения для {username}:'
-                         f'{confirmation_code}')
-        send_mail(
-            message=token_message,
-            subject='Confirmation code',
-            recipient_list=[email],
-            from_email=None
-        )
-        return Response(serializer.data, status=HTTPStatus.OK)
+
+    confirmation_code = default_token_generator.make_token(
+        User.objects.get(email=email, username=username)
+    )
+    token_message = (f'Код подтверждения для {username}:'
+                     f'{confirmation_code}')
+    send_mail(
+        message=token_message,
+        subject='Confirmation code',
+        recipient_list=[email],
+        from_email=None
+    )
+    return Response(serializer.data, status=HTTPStatus.OK)
 
 
 @api_view(['POST'])
