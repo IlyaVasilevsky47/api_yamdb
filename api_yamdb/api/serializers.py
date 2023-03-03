@@ -7,6 +7,7 @@ from rest_framework.validators import UniqueValidator
 
 from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 from users.models import ReviewUser
+from users.validators import validate_username_not_me
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -151,6 +152,7 @@ class CreateTokenSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         required=True,
         max_length=150,
+        validators=[validate_username_not_me, ],
     )
 
     class Meta:
