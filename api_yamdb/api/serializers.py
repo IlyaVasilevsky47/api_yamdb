@@ -86,8 +86,7 @@ class PostPatchTitleSerializer(serializers.ModelSerializer):
         title = Title.objects.create(**validated_data)
 
         for genre in genres:
-            current_genre = Genre.objects.get(slug=genre)
-            GenreTitle.objects.create(genre=current_genre, title=title)
+            GenreTitle.objects.create(genre=genre, title=title)
         return title
 
     def to_representation(self, instance):
