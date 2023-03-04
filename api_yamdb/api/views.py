@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from django.db.models import Avg
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -11,9 +10,8 @@ from rest_framework import filters, mixins, permissions, viewsets
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from reviews.models import Category, Genre, Review, Title
-from users.models import ReviewUser
 
+from reviews.models import Category, Genre, Review, Title
 from .filters import TitleFilter
 from .permissions import (IsAdminAuth, IsAdminOrReadOnly,
                           IsReadOnlyAuthorAdminModeratorAuth)
@@ -144,7 +142,7 @@ def create_new_user(request):
 
     email = request.data.get('email')
     username = request.data.get('username')
-    is_present = ReviewUser.objects.filter(
+    is_present = User.objects.filter(
         email=email, username=username
     ).exists()
 
