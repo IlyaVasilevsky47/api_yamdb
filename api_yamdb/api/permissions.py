@@ -3,7 +3,7 @@ from http import HTTPStatus
 from rest_framework import permissions
 
 
-class Admin_ReadOnly_Permission(permissions.BasePermission):
+class IsAdminOrReadOnly(permissions.BasePermission):
     """
     Или пользователь является админом,
     или можно только посмотреть
@@ -17,7 +17,7 @@ class Admin_ReadOnly_Permission(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS
 
 
-class All_Permission(permissions.BasePermission):
+class IsReadOnlyAuthorAdminModeratorAuth(permissions.BasePermission):
     """
     Определение прав внесения изменений:
     ReadOnly, Author, Admin, Moderator, Auth
@@ -39,7 +39,7 @@ class All_Permission(permissions.BasePermission):
         return request.method in permissions.SAFE_METHODS
 
 
-class Admin_Auth_Permission(permissions.BasePermission):
+class IsAdminAuth(permissions.BasePermission):
     """Доступ к контенту только админу или аутентифицированным"""
     def has_permission(self, request, view):
         return (
@@ -47,7 +47,7 @@ class Admin_Auth_Permission(permissions.BasePermission):
         )
 
 
-class PUT_username_not_allowed(permissions.BasePermission):
+class IsNotAllowedAny(permissions.BasePermission):
     """
     PUT-запрос к `/api/v1/users/{username}/`
     не предусмотрен и возвращает статус 405.
@@ -55,4 +55,3 @@ class PUT_username_not_allowed(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method == 'PUT':
             return HTTPStatus.METHOD_NOT_ALLOWED
-        # return super().has_object_permission(request, view, obj)

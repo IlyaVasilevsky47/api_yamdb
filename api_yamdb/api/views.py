@@ -14,8 +14,8 @@ from reviews.models import Category, Genre, Review, Title
 from users.models import ReviewUser
 
 from .filters import TitleFilter
-from .permissions import (Admin_Auth_Permission, Admin_ReadOnly_Permission,
-                          All_Permission)
+from .permissions import (IsAdminAuth, IsAdminOrReadOnly,
+                          IsReadOnlyAuthorAdminModeratorAuth)
 from .serializers import (CategorySerializer, CommentSerializer,
                           CreateTokenSerializer, CreateUserSerializer,
                           GenreSerializer, GetTitleSerializer,
@@ -35,7 +35,7 @@ class ListCreateDestroy(mixins.ListModelMixin,
 class CategoryViewSet(ListCreateDestroy):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (Admin_ReadOnly_Permission,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
@@ -43,14 +43,14 @@ class CategoryViewSet(ListCreateDestroy):
 class GenreViewSet(ListCreateDestroy):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (Admin_ReadOnly_Permission,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('name',)
 
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
-    permission_classes = (Admin_ReadOnly_Permission,)
+    permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, )
     filterset_class = TitleFilter
 
@@ -62,7 +62,7 @@ class TitleViewSet(viewsets.ModelViewSet):
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [All_Permission]
+    permission_classes = [IsReadOnlyAuthorAdminModeratorAuth]
 
     def get_queryset(self):
         title_id = self.kwargs.get("title_id")
@@ -82,7 +82,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = [All_Permission]
+    permission_classes = [IsReadOnlyAuthorAdminModeratorAuth]
 
     def get_queryset(self):
         review_id = self.kwargs.get("review_id")
@@ -102,7 +102,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 class ReviewUserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ReviewUserSerializer
-    permission_classes = (Admin_Auth_Permission,)
+    permission_classes = (IsAdminAuth,)
     lookup_field = 'username'
     lookup_value_regex = '[^/]+'
     filter_backends = (filters.SearchFilter,)
