@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from django.db.models import Avg
 from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -50,6 +51,7 @@ class GenreViewSet(ListCreateDestroy):
 
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
+    queryset.annotate(Avg('reviews__score'))
     permission_classes = (IsAdminOrReadOnly,)
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_class = TitleFilter
