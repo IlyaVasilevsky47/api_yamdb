@@ -1,5 +1,3 @@
-from http import HTTPStatus
-
 from rest_framework import permissions
 
 
@@ -45,13 +43,3 @@ class IsAdminAuth(permissions.BasePermission):
         return (
             request.user.is_authenticated and request.user.is_admin
         )
-
-
-class IsNotAllowedAny(permissions.BasePermission):
-    """
-    PUT-запрос к `/api/v1/users/{username}/`
-    не предусмотрен и возвращает статус 405.
-    """
-    def has_object_permission(self, request, view, obj):
-        if request.method == 'PUT':
-            return HTTPStatus.METHOD_NOT_ALLOWED
