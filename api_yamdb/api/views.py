@@ -51,8 +51,9 @@ class GenreViewSet(ListCreateDestroy):
 class TitleViewSet(viewsets.ModelViewSet):
     queryset = Title.objects.all()
     permission_classes = (IsAdminOrReadOnly,)
-    filter_backends = (DjangoFilterBackend, )
+    filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_class = TitleFilter
+    search_fields = ['category', 'genre', 'name', 'year']
 
     def get_serializer_class(self):
         if self.request.method in permissions.SAFE_METHODS:
