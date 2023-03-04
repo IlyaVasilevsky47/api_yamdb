@@ -85,9 +85,9 @@ class PostPatchTitleSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         genres = validated_data.pop('genre')
         title = Title.objects.create(**validated_data)
-
-        for genre in genres:
-            GenreTitle.objects.create(genre=genre, title=title)
+        GenreTitle.objects.bulk_create(
+            [GenreTitle(genre=genre, title=title) for genre in genres]
+        )
         return title
 
     def to_representation(self, instance):
@@ -146,7 +146,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ('username', 'email')
 
 
-class CreateTokenSerializer(serializers.ModelSerializer):
+class CreateTokenSerializer(serializers.Serializer):
     """Создание токена"""
     confirmation_code = serializers.CharField(required=True)
     username = serializers.CharField(
