@@ -154,7 +154,3 @@ class CreateTokenSerializer(serializers.Serializer):
         max_length=150,
         validators=[validate_username_not_me, ],
     )
-
-    class Meta:
-        model = ReviewUser
-        fields = ('username', 'confirmation_code')
