@@ -86,9 +86,9 @@ http://localhost/redoc/
 ## Авторы:
 | Имя | GitHub |
 | - | :-: |
-| Илья Василевсикй | [IlyaVasilevsky47](https://github.com/IlyaVasilevsky47) |
-| Игорь Белошицкий | [IgorBelosh](https://github.com/IgorBelosh) |
-| Ангелина Тингаева | [Angelina91](https://github.com/Angelina91) |
+| Илья Василевсикй | <a href="https://github.com/IlyaVasilevsky47" target="_blank"> :heavy_check_mark:</a> |
+| Игорь Белошицкий | <a href="https://github.com/IgorBelosh" target="_blank"> :heavy_check_mark:</a> |
+| Ангелина Тингаева | <a href="https://github.com/Angelina91" target="_blank"> :heavy_check_mark:</a> |
 
 ## Технический стек
 - Python 3.7.9
