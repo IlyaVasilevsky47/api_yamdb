@@ -1,6 +1,6 @@
 # API YaMDb
 
-[![CI](https://github.com/IlyaVasilevsky47/foodgram-project-react/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/IlyaVasilevsky47/foodgram-project-react/actions/workflows/main.yml)
+[![CI](https://github.com/IlyaVasilevsky47/api_yamdb/actions/workflows/main.yml/badge.svg?branch=master)](https://github.com/IlyaVasilevsky47/api_yamdb/actions/workflows/main.yml)
 
 API YaMDb - это программный интерфейс, предназначенный для социальной сети, которая позволяет пользователям оставлять отзывы на различные произведения.
 
